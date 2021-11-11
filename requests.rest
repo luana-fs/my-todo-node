@@ -1,13 +1,40 @@
+//cria usuário
 POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-    "name": "joana",
-    "username":"jojo"
+    "name": "mari",
+    "username":"mariri"
 }
 
 ###
 
+//busca tarefas por nome de usuário
  http://localhost:3333/todos 
  Content-Type: application/json
- username: lualuna
+ username: mariri
+
+###
+
+//criar tarefa
+ POST http://localhost:3333/todos
+ Content-Type: application/json
+ username: mariri
+
+ {
+    "title": "tarefa",
+    "deadline":"amanhã"
+}
+
+###
+
+# alterar tarefa por id da tarefa
+
+PUT http://localhost:3333/todos/245e0c00-a3e9-4e80-bce3-a97cbcd952ed
+Content-Type: application/json
+username: mariri
+
+{
+    "title": "tarefa ALTERADA",
+    "deadline":"amanhã"
+}
