@@ -1,0 +1,13 @@
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+    "name": "joana",
+    "username":"jojo"
+}
+
+###
+
+ http://localhost:3333/todos 
+ Content-Type: application/json
+ username: lualuna
