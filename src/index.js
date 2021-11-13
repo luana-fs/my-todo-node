@@ -8,85 +8,126 @@ app.use(cors());
 app.use(express.json());
 
 const users = [];
-console.log(users)
+
+
 function checksExistsUserAccount(request, response, next) {
-  const {username} = request.headers
+  try {
+    const {username} = request.headers
 
-  const user = users.find((user) => user.username === username)
+    const user = users.find((user) => user.username === username)
 
-  if(!user) {
-    response.status(404).send({message: "Usuário não existe."})
+    if(!user) {
+      response.status(400).send({message: "Usuário não existe."})
+    }
+
+    request.user = user
+    return next()
+  } catch (err) {
+    response.status(500).send(err.message)
   }
-
-  request.user = user
-  next()
 }
 
 app.post('/users', (request, response) => {
-  const {name, username} = request.body
+  try {
+    const {name, username} = request.body
 
-  const id = uuidv4()
-
-  const newUser = {
-    id,
-    name,
-    username,
-    todos: []
+    const id = uuidv4()
+  
+    const newUser = {
+      id,
+      name,
+      username,
+      todos: []
+    }
+  
+    users.push(newUser)
+  
+    response.status(201).send({newUser})
+    console.log(response.body)
+  } catch (err) {
+    response.json(err.message)
   }
-
-  users.push(newUser)
-
-  response.status(201).send({newUser})
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-const {user} = request
+  try {
+    const {user} = request
 
-response.status(200).send({tarefas: user.todos})
+  response.status(200).send({tarefas: user.todos})
+  } catch (err) {
+    response.json(err.message)
+  }
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
-  const {title, deadline} = request.body
+  try {
+    const {title, deadline} = request.body
 
-  const id = uuidv4()
-
-  const {user} = request
-
-  const newTask = {
-    id,
-    title,
-    done: false,
-    deadline: new Date(deadline),
-    created_at: Date.now()
+    const id = uuidv4()
+  
+    const {user} = request
+  
+    const newTask = {
+      id,
+      title,
+      done: false,
+      deadline: new Date(deadline),
+      created_at: Date.now()
+    }
+  
+    user.todos.push(newTask)
+  
+    response.status(201).send({user})
+  } catch(err) {
+    response.json(err.message)
   }
-
-  user.todos.push(newTask)
-
-  response.status(201).send({user})
 
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
-   const {title, deadline} = request.body
-   const {id} = request.params
-   const {user} = request
-
-   const task = user.todos.find((task) => task.id === id)
-   task.title = title
-   task.deadline = deadline
-   console.log(task)
-
-   response.status(200).send({user})
+  try {
+    const {title, deadline} = request.body
+    const {id} = request.params
+    const {user} = request
+ 
+    const task = user.todos.find((task) => task.id === id)
+    task.title = title
+    task.deadline = deadline
+ 
+    response.status(200).send({user})
+  } catch(err) {
+    response.json(err.message)
+  }
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  try {
+    const {user} = request
+    const {id} = request.params
+  
+    const task = user.todos.find((task) => task.id === id)
+    task.done = true
+    
+    response.status(200).send({"Tarefa alterada com sucesso!": task})
+  } catch (err) {
+    response.json(err.message)
+  }
+
 });
 
 app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  try {
+    const {user} = request
+    const {id} = request.params
+    
+    const newTaskList = user.todos.filter((task) => task.id !== id)
+    user.todos = newTaskList
+  
+    response.status(200).send({"Tarefa deletada com sucesso!": user})
+  } catch (err) {
+    response.json(err.message)
+  }
+  
 });
 
 module.exports = app;
-
-// app.listen(3333, () => console.log("Deu certo"))

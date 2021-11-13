@@ -3,26 +3,26 @@ POST http://localhost:3333/users
 Content-Type: application/json
 
 {
-    "name": "mari",
-    "username":"mariri"
+    "name": "lua",
+    "username":"lua182"
 }
 
 ###
 
 //busca tarefas por nome de usuário
- http://localhost:3333/todos 
- Content-Type: application/json
- username: mariri
+http://localhost:3333/todos 
+Content-Type: application/json
+username: mariri
 
 ###
 
 //criar tarefa
- POST http://localhost:3333/todos
- Content-Type: application/json
- username: mariri
+POST http://localhost:3333/todos
+Content-Type: application/json
+username: mariri
 
  {
-    "title": "tarefa",
+    "title": "2222222221",
     "deadline":"amanhã"
 }
 
@@ -30,7 +30,7 @@ Content-Type: application/json
 
 # alterar tarefa por id da tarefa
 
-PUT http://localhost:3333/todos/245e0c00-a3e9-4e80-bce3-a97cbcd952ed
+PUT http://localhost:3333/todos/fe1c711e-af54-4566-bd7b-4dca77b6354f
 Content-Type: application/json
 username: mariri
 
@@ -38,3 +38,19 @@ username: mariri
     "title": "tarefa ALTERADA",
     "deadline":"amanhã"
 }
+
+###
+
+//altera status da tarefa
+
+PATCH http://localhost:3333/todos/fe1c711e-af54-4566-bd7b-4dca77b6354f/done
+Content-Type: application/json
+username: mariri
+
+
+###
+
+DELETE http://localhost:3333/todos/55ce1ba8-9552-43d8-9bb4-6c94b1240ccb
+Content-Type: application/json
+username: mariri
+
