@@ -17,21 +17,29 @@ function checksExistsUserAccount(request, response, next) {
     const user = users.find((user) => user.username === username)
 
     if(!user) {
-      response.status(400).send({message: "Usuário não existe."})
+      return response.status(404).json({message: "Usuário não existe."})
     }
 
     request.user = user
     return next()
   } catch (err) {
-    response.status(500).send(err.message)
+    return response.status(500).json(err.message)
   }
 }
 
 app.post('/users', (request, response) => {
   try {
     const {name, username} = request.body
+    // console.log(request.body)
 
     const id = uuidv4()
+
+    const userExist = users.find((user) => user.username === username)
+
+    if(userExist) {
+      // console.log(response.body.error)
+      return response.status(400).json({message: "Usuário já existe"})
+    }
   
     const newUser = {
       id,
@@ -41,11 +49,11 @@ app.post('/users', (request, response) => {
     }
   
     users.push(newUser)
+    // console.log(response.body.id)
   
-    response.status(201).send({newUser})
-    console.log(response.body)
-  } catch (err) {
-    response.json(err.message)
+    return response.status(201).json(newUser)
+  } catch (error) {
+    return response.status(400).json(error.message)
   }
 });
 
@@ -53,9 +61,9 @@ app.get('/todos', checksExistsUserAccount, (request, response) => {
   try {
     const {user} = request
 
-  response.status(200).send({tarefas: user.todos})
-  } catch (err) {
-    response.json(err.message)
+  return response.status(200).json(user.todos)
+  } catch (error) {
+    return response.json(error.message)
   }
 });
 
@@ -77,9 +85,9 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
   
     user.todos.push(newTask)
   
-    response.status(201).send({user})
+    return response.status(201).json(newTask)
   } catch(err) {
-    response.json(err.message)
+    return response.json(err.message)
   }
 
 });
@@ -89,14 +97,20 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
     const {title, deadline} = request.body
     const {id} = request.params
     const {user} = request
- 
+  
+
     const task = user.todos.find((task) => task.id === id)
+
+    if(!task) {
+      return response.status(404).json({message: "Not found"})
+    }
+
     task.title = title
     task.deadline = deadline
  
-    response.status(200).send({user})
+    return response.status(200).json(task)
   } catch(err) {
-    response.json(err.message)
+    return response.json(err.message)
   }
 });
 
@@ -106,11 +120,16 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
     const {id} = request.params
   
     const task = user.todos.find((task) => task.id === id)
+
+    if(!task) {
+      return response.status(404).json("Not found")
+    }
+
     task.done = true
     
-    response.status(200).send({"Tarefa alterada com sucesso!": task})
+    return response.status(200).json(task)
   } catch (err) {
-    response.json(err.message)
+    return response.json(err.message)
   }
 
 });
@@ -120,12 +139,20 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
     const {user} = request
     const {id} = request.params
     
+    const task = user.todos.find((task) => task.id === id)
+
+    if(!task) {
+      return response.status(404).json("Not found")
+    }
+    
     const newTaskList = user.todos.filter((task) => task.id !== id)
+
+
     user.todos = newTaskList
   
-    response.status(200).send({"Tarefa deletada com sucesso!": user})
+    return response.status(204).json({"Tarefa deletada com sucesso!": user})
   } catch (err) {
-    response.json(err.message)
+    return response.json(err.message)
   }
   
 });

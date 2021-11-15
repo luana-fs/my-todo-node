@@ -12,27 +12,27 @@ Content-Type: application/json
 //busca tarefas por nome de usuário
 http://localhost:3333/todos 
 Content-Type: application/json
-username: mariri
+username: lua182
 
 ###
 
 //criar tarefa
 POST http://localhost:3333/todos
 Content-Type: application/json
-username: mariri
+username: lua182
 
  {
-    "title": "2222222221",
-    "deadline":"amanhã"
+    "title": "aaaaaaa",
+    "deadline":"new Date()"
 }
 
 ###
 
 # alterar tarefa por id da tarefa
 
-PUT http://localhost:3333/todos/fe1c711e-af54-4566-bd7b-4dca77b6354f
+PUT http://localhost:3333/todos/ab61c652-ca65-42fa-bdef-010737951
 Content-Type: application/json
-username: mariri
+username: lua182
 
 {
     "title": "tarefa ALTERADA",
@@ -45,7 +45,7 @@ username: mariri
 
 PATCH http://localhost:3333/todos/fe1c711e-af54-4566-bd7b-4dca77b6354f/done
 Content-Type: application/json
-username: mariri
+username: lua182
 
 
 ###
