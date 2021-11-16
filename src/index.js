@@ -17,7 +17,7 @@ function checksExistsUserAccount(request, response, next) {
     const user = users.find((user) => user.username === username)
 
     if(!user) {
-      return response.status(404).json({message: "Usuário não existe."})
+      return response.status(404).json({error: "Usuário não existe."})
     }
 
     request.user = user
@@ -38,7 +38,7 @@ app.post('/users', (request, response) => {
 
     if(userExist) {
       // console.log(response.body.error)
-      return response.status(400).json({message: "Usuário já existe"})
+      return response.status(400).json({error: "Usuário já existe"})
     }
   
     const newUser = {
@@ -102,7 +102,7 @@ app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
     const task = user.todos.find((task) => task.id === id)
 
     if(!task) {
-      return response.status(404).json({message: "Not found"})
+      return response.status(404).json({error: "Not found"})
     }
 
     task.title = title
@@ -122,7 +122,7 @@ app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
     const task = user.todos.find((task) => task.id === id)
 
     if(!task) {
-      return response.status(404).json("Not found")
+      return response.status(404).json({error: "Not found"})
     }
 
     task.done = true
@@ -142,7 +142,7 @@ app.delete('/todos/:id', checksExistsUserAccount, (request, response) => {
     const task = user.todos.find((task) => task.id === id)
 
     if(!task) {
-      return response.status(404).json("Not found")
+      return response.status(404).json({error: "Not found"})
     }
     
     const newTaskList = user.todos.filter((task) => task.id !== id)
